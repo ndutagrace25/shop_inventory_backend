@@ -15,6 +15,17 @@ class CategoryListCreateView(generics.ListCreateAPIView):
 
     ordering = ["name"]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        self.perform_create(serializer)
+
+        return Response(
+            {"message": "Category created successfully", "data": serializer.data}
+        )
+
 
 class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.select_related("category").all()
